@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+//import { Box, Input, Flex, Text, Button, Link } from "@chakra-ui/core";
+import createBrowserHistory from "history/createBrowserHistory";
+import { Router, Route, Switch, useLocation,Redirect } from "react-router-dom";
+import SignIn from "./screens/Customer/SignInScreen";
+import SignOut from "./screens/Customer/SignUpScreen";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import Routes1 from "./screens/Customer/Routes";
+const history = createBrowserHistory();
 
-function App() {
+const Routes: React.FC<{}> = () => {
+  //const location =useLocation<unknown|any>();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router history={history}>
+      <Switch>
+        <Route exact path="/">
+          <Redirect to="/signinc" />
+        </Route>
+        <Route path="*">
+          <Routes1/>
+        </Route>
+      </Switch>
+    </Router>
   );
-}
+};
 
-export default App;
+export default Routes;
