@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# DBMS COURSE PROJECT - UI-Online Food  Ordering System - React JS - TypeScript
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
