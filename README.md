@@ -1,5 +1,5 @@
-# DBMS COURSE PROJECT - UI-Online Food  Ordering System - React JS - TypeScript
-
+# DBMS COURSE PROJECT - Online Food  Ordering System 
+## React JS - TypeScript - ChakraUI - Formik 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

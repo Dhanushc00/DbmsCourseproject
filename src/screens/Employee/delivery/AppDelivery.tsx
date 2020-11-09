@@ -8,9 +8,9 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import Header from './DeskHeader';
-import MenuMod from './MenuMod';
-import Assign from './Assign';
+import Header from './DeliveryHeader';
+//import MenuMod from './MenuMod';
+
 const AnimatedSwitch = () => {
   const location = useLocation();
   let { path, url } = useRouteMatch();
@@ -20,8 +20,7 @@ const AnimatedSwitch = () => {
       {/* <TransitionGroup>
         <CSSTransition key={location.key} classNames="slide" timeout={10}> */}
           <Switch location={location}>
-          <Route path={`${path}/MenuMod`} render={() => <MenuMod />} />
-          <Route path={`${path}/Assign`} render={() => <Assign />} />
+          {/* <Route path={`${path}/MenuMod`} render={() => <MenuMod />} /> */}
             {/* <Route path={`${path}/menu`} render={() => <Menu />}/>
             <Route path={`${path}/cart`} render={() => <Cart />}/>
             <Route path={`${path}/orders`} render={() => <Orders />}/> */}

@@ -8,7 +8,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import MenuMod from "./MenuMod";
+//import MenuMod from "./MenuMod";
 // Note: This code could be better, so I'd recommend you to understand how I solved and you could write yours better :)
 const Header = () => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const Header = () => {
       >
         <Flex align="center" mr={5}>
           <Heading as="h1" size="lg" letterSpacing={"-.1rem"}>
-            Zomato - Desk Employee
+            Zomato - Delivery Employee 
           </Heading>
         </Flex>
 
@@ -43,39 +43,6 @@ const Header = () => {
             <title>Menu</title>
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
           </svg>
-        </Box>
-
-        <Box
-          display={{ sm: show ? "block" : "none", md: "flex" }}
-          width={{ sm: "full", md: "auto" }}
-          alignItems="center"
-          justifyContent="flex-end"
-          flexGrow={1}
-        >
-          {/* <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
-          Menu
-        </Text>
-        <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
-          Cart
-        </Text>
-        <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
-          Orders
-        </Text> */}
-          <Link to={`${url}/Assign`}>
-            <Button bg="transparent" border="1px" mr={5}>
-              Assign Delivery Agent
-            </Button>
-          </Link>
-          <Link to={`${url}/MenuMod`}>
-            <Button bg="transparent" border="1px" mr={5}>
-              Modify Menu
-            </Button>
-          </Link>
-          {/* <Link to={`${url}/orders`}>
-        <Button bg="transparent" border="1px" mr={5}>
-            Orders
-        </Button>
-        </Link> */}
         </Box>
 
         {/* <Box

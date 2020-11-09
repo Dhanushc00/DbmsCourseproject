@@ -5,7 +5,7 @@ import { Router, Route, Switch, useLocation,Redirect } from "react-router-dom";
 import SignIn from "./screens/Customer/SignInScreen";
 import SignOut from "./screens/Customer/SignUpScreen";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import Routes1 from "./screens/Customer/Routes";
+import Routes1 from "./screens/Routes";
 const history = createBrowserHistory();
 
 const Routes: React.FC<{}> = () => {
