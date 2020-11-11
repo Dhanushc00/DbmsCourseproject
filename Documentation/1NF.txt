@@ -1,0 +1,34 @@
+Customer(ItemID,ItemPrice,ItemName,Item_Status,LocID,Address,Landmarks,EmpID,EmpName,Phone,Gender,Joindate,Password,CustID,CustName,Phone.no,Quantity,VehicleID,Status,Current_status,PaymentID,Payment_Method,Payment_Amt,OrderID,OrderTimeStamp,Quantity,ItemPrice, DeskNo)
+
+Functional dependencies:
+CustID -> CustName,LocID,Phone.no
+CustID,ItemID -> Quantity
+ItemID -> ItemPrice,ItemName,Item,Item_Status
+ItemID,OrderID -> ItemQty,ItemPrice
+LocID -> Landmarks,Address
+EmpID -> EmpName,Phone,Gender,Password,Joindate,Current_status,DeskNo
+VehicleID -> LocID
+OrderID -> CustID,PaymentID,OrderTimeStamp
+PaymentID -> Payment_Method,Payment_Amt
+CustID
+
+1NF:
+Customer(CustID,CustName,LocID,Phone.no)
+Cart(CustID,ItemID,Quantity)
+Menu(ItemID,ItemPrice,ItemName,Item,Item_Status)
+OrderItems(ItemID,OrderID,ItemQty,ItemPrice)
+Location(LocID,Landmarks,Address)
+Employee(EmpID,EmpName,Phone,Gender,Password,Joindate,Current_status,DeskNo)
+Vehicle(VehicleID,LocID)
+Order(OrderID,CustID,PaymentID,OrderTimeStamp)
+Payment(PaymentID,Payment_Method,Payment_Amt)
+
+Using Specialisation we split the employee table for accomodating business logic
+
+Employee -> DeskEmployee, DeliveryAgent
+DeskEmployee(EmpID, DeskNo)
+DeliveryAgent(EmpID,Current_status)
+
+
+Partial dependencies
+

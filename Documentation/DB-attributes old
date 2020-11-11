@@ -1,0 +1,78 @@
+AttribTable(CustID,CustName,LocID,Phone.no,Cart,ItemID,DAgent,ItemPrice,TotalPrice,ItemQty,OrderID,EmpID,Phone.no,EmpName,Gender,JoinDate,Password,Desk.no,EmpID,DAgentID,DAgentName,Phone.no,Password,CurrentStatus,DeliveryID,Address,Landmark,VehicleID,Currentstatus,PaymentID,PaymentMethod,PaymentAmt,ItemName,ItemStatus)
+
+Fucntional Dependencies:
+
+CustID -> CustName,LocID,Phone.no,Cart
+CustID,OrderID -> ItemID,DAgentID,ItemPrice,TotalPrice,ItemQty
+EmpID -> EmpName,Phone,Gender,JoinDate, Password,Deskno,CurrentStatus,DAgentID,DAgentName
+LocID -> Landmark,Address
+CustID,OrderID -> PaymentID
+DAgentID -> DAgentName,Password,EmpID,Phone,CurrentStatus
+PaymentID -> PaymentMethod, PaymentAmt
+ItemID -> ItemName,ItemPrice,ItemStatus
+EmpName -> DAgentName
+Phone -> Phone
+Password -> Password
+OrderID -> DeliveryID
+DeliveryID -> DAgentID
+VehicleID -> LocID
+DAgentID -> LocID
+
+Removing Multivalued attributes:
+*The cart attribute in the Customer entity is multivalued as it contains the contents of the customer's cart
+*We add Cart as a separate entity with CartID  and CustID as Primary key
+
+Specialisation:
+*The Employee entity can be specialised by splitting it into two types of employes and having unique attributes to each
+*Here we split the Entities 
+
+1NF :
+
+Customer(CustID,LocID,Phone,CustName,CartNo)
+Cart(CartID, CustID, ItemID, ItemQty)
+Order(OrderID, DAgentID, ItemPrice, TotalPrice, ItemQty, ItemID, CustID)
+Employee(Phone,EmpName,Gender,JoinDate,Password,EmpID)
+DeskEmployee(Deskno,EmpID)
+DeliveryAgent(EmpID,DAgentID,DAgentName,Phone,Password,CurrentStatus)
+Location(LocID, Landmark, Address)
+Delivery(DeliveryID,DAgentID,OrderID,LocID)
+Payment(PaymentID, PaymentAmt,PaymentID, PaymentMethod,OrderID,CustID)
+Menu(ItemID,ItemName,ItemPrice,ItemStatus)
+Vehicle(VehicleID,LocID,CurrentStatus, DAgentID)
+
+
+
+Partial Dependencies:
+EmpID -> DAgentName,Phone,Password
+CustID -> ItemID, ItemQty
+
+Removing Extraneous Attributes:
+*The attributes DAgentId, DAgentName, Password, Phone are just copies of the EmpID, EmpName, Phone,Password in the Employee table
+*The Primary key DAgentID is dependent on EmpID
+*So we remove all these attributes out of the table and just have EmpID and CurrentStatus in the table
+
+Replacing DAgentID with EmpID:
+*As the attribute DAgentIDis removed from the schema we have to replace it's occurrences with EmpID
+
+
+2NF:
+
+Customer(CustID,LocID,Phone,CustName,CartNo)
+Cart(CartID, ItemID, ItemQty)
+Order(OrderID, ItemPrice, TotalPrice, ItemQty, ItemID, CustID)
+Employee(Phone,EmpName,Gender,JoinDate,Password,EmpID)
+DeskEmployee(Deskno,EmpID)
+DeliveryAgent(EmpID,Phone,Password,CurrentStatus)
+Location(LocID, Landmark, Address)
+Delivery(DeliveryID,EmpID,OrderID,LocID)
+Payment(PaymentID, PaymentAmt,PaymentID, PaymentMethod,OrderID,CustID)
+Menu(ItemID,ItemName,ItemPrice,ItemStatus)
+Vehicle(VehicleID,LocID,CurrentStatus, EmpID)
+
+
+Trnasitive Dependencies:
+ItemID -> ItemQty  => This applies in two Entities -> Order and Cart
+EmpID -> CurrentStatus
+OrderID -> LocID,EmpID => DeliveryID Becomes an Extraneous attribute here
+
+

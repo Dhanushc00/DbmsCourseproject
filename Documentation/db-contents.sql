@@ -1,0 +1,156 @@
+create table Menu(ItemID int NOT NULL, ItemPrice float(6,2) NOT NULL, ItemName varchar(60) NOT NULL, Item_Status varchar(5), primary key(ItemID));
+create table Location(LocID int NOT NULL, Address varchar(100) NOT NULL, Landmarks varchar(60), primary key(LocID));
+create table Employee(EmpID int NOT NULL, EmpName varchar(15) NOT NULL, Phone int NOT NULL, Gender char(1), Joindate date NOT NULL, Password varchar(30) NOT NULL, primary key(EmpID));
+create table Customer(CustID int NOT NULL,CustName varchar(15) NOT NULL, LocID int NOT NULL, Phone_no int NOT NULL, primary key (CustID), foreign key(LocID) references Location);
+create table Cart(CustID int NOT NULL, ItemID int, Quantity int, primary key(CustID,ItemID), foreign key(ItemID) references Menu, foreign key(CustID) references Customer);
+create table Vehicle(VehicleID int NOT NULL, LocID int, Status varchar(7), primary key(VehicleID), foreign key(LocID) references Location);
+create table Delivery_Agent(EmpID int NOT NULL,CurrentStatus varchar(5) NOT NULL, VehicleID int, primary key(EmpID), foreign key (EmpID) references Employee);
+create table Desk_Employee(EmpID int NOT NULL, Desk_No int NOT NULL, primary key(EmpID), foreign key (EmpID) references Employee);
+create table Payment(PaymentID int NOT NULL, Payment_method varchar(5) NOT NULL, Payment_Amt float(7,2) NOT NULL, primary key(PaymentID));
+create table OrderDetails(CustID int NOT NULL,OrderID int NOT NULL, PaymentID int NOT NULL, OrderTimeStamp TIMESTAMP NOT NULL,  primary key(OrderID), foreign key(CustID) references Customer, foreign key(PaymentID) references Payment);
+create table OrderItems(OrderID int NOT NULL, ItemID int NOT NULL, ItemPrice float(6,2) NOT NULL, Quantity int NOT NULL, primary key(OrderID,ItemID), foreign key(OrderID) references OrderDetails, foreign key(ItemID) references Menu);
+create table Delivers(EmpID int NOT NULL, LocID int NOT NULL, OrderID int NOT NULL,foreign key (EmpID) references Employee, foreign key(LocID) references Location, foreign key(OrderID) references OrderDetails, primary key(OrderID));
+
+
+insert into Menu values(601, 200, 'Reg.Pizza','avl');
+insert into Menu values(602, 300, 'Med.Pizza','avl');
+insert into Menu values(603, 450, 'Lar.Pizza','avl');
+insert into Menu values(604, 175, 'Rice Bowl','avl');
+insert into Menu values(605, 350, 'Grill Chicken','avl');
+insert into Menu values(606, 460, 'Cheese Grill Chicken','avl');
+insert into Menu values(607, 125, 'Chicken Biryani','avl');
+insert into Menu values(608, 225, 'Lollypop Chicken','avl');
+insert into Menu values(609, 250, '1KG Black Forest','avl');
+insert into Menu values(610, 135, '0.5KG Black Forest','avl');
+
+insert into Location values(201, '121 Sivasakthi Nagar' , 'Arun Icecream Parlour');
+insert into Location values(202, '11 KPN Nagar' , 'Black and white Saloon');
+insert into Location values(203, '140 Kumar Nagar' , 'Dominos Pizza');
+insert into Location values(204, '34/9 Gandhi Nagar' , 'Apple service Center');
+insert into Location values(205, '1 Park Avenue' , 'Arasan Arisi Mandi');
+insert into Location values(206, '13 Prime Appartments' , 'Balaji Electrical Shop');
+insert into Location values(207, '121/45 Vivekanadhar Colony' , 'Supreme Mobiles');
+insert into Location values(208, '134/18 Golden Nagar' , 'Vasanth And Co');
+insert into Location values(209, '48 Brindhavan Nagar' , 'Gandhi Park');
+insert into Location values(210, '59 Karupurayan Colony' , 'Stadium Sports Corner');
+
+insert into Employee values(301, 'Kunal', 8907680243, 'M',DATE '2010-07-19', 'Ironmanrocks24');
+insert into Employee values(302, 'Sejal', 8956750243, 'F',DATE '2008-06-01', 'Crystalpal13');
+insert into Employee values(303, 'Harry', 7307683243, 'M',DATE '2009-03-13', 'Engineer101');
+insert into Employee values(304, 'Simran', 7907685243, 'F',DATE '2010-05-23', 'SimplePassword');
+insert into Employee values(305, 'Grace', 8907680243, 'F',DATE '2011-07-29', 'Greatday1234');
+insert into Employee values(306, 'Karthi', 8907680243, 'M',DATE '2009-05-09', 'MySecurePassword12');
+insert into Employee values(307, 'Jai', 8779023243, 'M',DATE '2009-08-30', 'Panther23434');
+insert into Employee values(308, 'Sandy', 8457367243, 'M',DATE '2010-07-21', 'Hacker12345');
+insert into Employee values(309, 'Siva', 7786890003, 'M',DATE '2010-09-11', 'Uncrackable123');
+insert into Employee values(310, 'Sheela', 8212380243, 'F',DATE '2012-07-11', 'Jarvisisgreat1908');
+
+insert into Customer values(101, 'Mithun', 201, 9294029977);
+insert into Customer values(102, 'Dhanush', 202, 9924029971);
+insert into Customer values(103, 'Vicky', 203, 9993027972);
+insert into Customer values(104, 'Rohit' , 204, 9934029673);
+insert into Customer values(105, 'Dinesh' , 205, 9944022974);
+insert into Customer values(106, 'Gireesh' , 206, 9994042975);
+insert into Customer values(107, 'Giri' , 207, 9994029276);
+insert into Customer values(108, 'Sai' , 208, 9994629178);
+insert into Customer values(109, 'Gokul' , 209, 9994729379);
+insert into Customer values(110, 'Marry' , 210, 9994021370);
+
+insert into Cart values(101,604,1);
+insert into Cart values(102,602,2);
+insert into Cart values(103,603,3);
+insert into Cart values(104,607,4);
+insert into Cart values(105,610,5);
+insert into Cart values(106,608,1);
+insert into Cart values(107,607,3);
+insert into Cart values(108,609,1);
+insert into Cart values(109,601,2);
+insert into Cart values(110,605,3);
+
+insert into Vehicle values(901, 201,'N/A');
+insert into Vehicle values(902, 203,'N/A');
+insert into Vehicle values(903, NULL,'avl');
+insert into Vehicle values(904, NULL,'avl');
+insert into Vehicle values(905, NULL,'avl');
+insert into Vehicle values(906, 206,'N/A');
+insert into Vehicle values(907, 202,'N/A');
+insert into Vehicle values(908, NULL,'avl');
+insert into Vehicle values(909, NULL,'avl');
+insert into Vehicle values(910, 208,'N/A');
+
+insert into Delivery_Agent values(301,'N/A',901);
+insert into Delivery_Agent values(302,'avl',0);
+insert into Delivery_Agent values(304,'N/A',902);
+insert into Delivery_Agent values(305,'N/A',906);
+insert into Delivery_Agent values(306,'N/A',907);
+insert into Delivery_Agent values(307,'N/A',909);
+
+insert into Desk_Employee values(303,11);
+insert into Desk_Employee values(308,12);
+insert into Desk_Employee values(309,13);
+insert into Desk_Employee values(310,14);
+
+insert into Payment values(701,'Card',973.5);
+insert into Payment values(702,'UPI',708);
+insert into Payment values(703,'COD',442.5);
+insert into Payment values(704,'UPI',896.5);
+insert into Payment values(705,'COD',560.5);
+insert into Payment values(706,'Card',619.5);
+insert into Payment values(707,'UPI',236);
+insert into Payment values(708,'Card',354);
+insert into Payment values(709,'UPI',531);
+insert into Payment values(710,'COD',236);
+insert into Payment values(711,'Card',413);
+insert into Payment values(712,'COD',572.3);
+
+insert into OrderDetails values(101,401,701,TIMESTAMP'2020-04-20 00:00:05');
+insert into OrderDetails values(101,402,702,TIMESTAMP'2020-05-02 20:40:01');
+insert into OrderDetails values(103,403,703,TIMESTAMP'2020-05-18 21:00:00');
+insert into OrderDetails values(105,404,704,TIMESTAMP'2020-06-19 13:25:34');
+insert into OrderDetails values(106,405,705,TIMESTAMP'2020-06-22 14:07:04');
+insert into OrderDetails values(106,406,706,TIMESTAMP'2020-08-08 18:09:23');
+insert into OrderDetails values(104,407,707,TIMESTAMP'2020-08-19 09:20:56');
+insert into OrderDetails values(107,408,708,TIMESTAMP'2020-08-25 04:23:12');
+insert into OrderDetails values(107,409,709,TIMESTAMP'2020-09-18 07:45:16');
+insert into OrderDetails values(108,410,710,TIMESTAMP'2020-09-19 10:54:19');
+insert into OrderDetails values(108,411,711,TIMESTAMP'2020-10-12 12:12:18');
+insert into OrderDetails values(103,412,712,TIMESTAMP'2020-10-13 13:13:10');
+
+insert into OrderItems values(401,601,200,1);
+insert into OrderItems values(401,603,450,1);
+insert into OrderItems values(401,604,175,1);
+insert into OrderItems values(402,602,300,2);
+insert into OrderItems values(403,607,125,3);
+insert into OrderItems values(404,602,300,1);
+insert into OrderItems values(404,606,460,1);
+insert into OrderItems values(405,608,225,1);
+insert into OrderItems values(405,609,250,1);
+insert into OrderItems values(406,607,125,1);
+insert into OrderItems values(406,608,225,1);
+insert into OrderItems values(406,604,175,1);
+insert into OrderItems values(407,601,200,1);
+insert into OrderItems values(408,602,300,1);
+insert into OrderItems values(409,603,450,1);
+insert into OrderItems values(410,601,200,1);
+insert into OrderItems values(411,605,350,1);
+insert into OrderItems values(412,605,350,1);
+insert into OrderItems values(412,610,135,1);
+
+insert into Delivers values(301,201,401);
+insert into Delivers values(304,203,402);
+insert into Delivers values(305,206,403);
+insert into Delivers values(306,202,404);
+insert into Delivers values(307,208,405);
+
+select * from Menu;
+select * from Location;
+select * from Employee;
+select * from Customer;
+select * from Cart;
+select * from Vehicle;
+select * from Delivery_Agent;
+select * from Desk_Employee;
+select * from Payment;
+select * from OrderDetails;
+select * from OrderItems;
+select * from Delivers;
