@@ -10,6 +10,7 @@ import {
   Box,
   Stack,
   Flex,
+  Button,
 } from "@chakra-ui/core";
 import CartLogo from "../../../assets/cart2.svg";
 //import axios, { AxiosResponse } from "axios";
@@ -23,22 +24,34 @@ const Menu: React.FC = () => {
     price: Number;
   }
   interface Rec {
-    ItemID:string,
-    ItemPrice:number,
-    ItemName:string,
-    Item_Status:string
+    ItemID: string;
+    ItemPrice: number;
+    ItemName: string;
+    Item_Status: string;
   }
-  const [data, setData] = React.useState<values[]>([
-   
-  ]);
+  const [data, setData] = React.useState<values[]>([]);
+  let price:number;
+  React.useEffect(() => {
+    price = 0;
+    Object.values(data).map((q) => {
+      price += Number(q.qty) * Number(q.price);
+    });
+    setPrice(price);
+  }, [data]);
+  const [price1, setPrice] = React.useState<Number>(0);
   React.useEffect(() => {
     Axios.get("/menu")
       .then((res: any) => {
-        console.log(res.data);
-        const tp=res.data.map((q:Rec)=>{
-          return {id:String(q.ItemID),qty:0,price:q.ItemPrice,name:q.ItemName};
-        })
-        console.log(tp);
+        //console.log(res.data);
+        const tp = res.data.map((q: Rec) => {
+          return {
+            id: String(q.ItemID),
+            qty: 0,
+            price: q.ItemPrice,
+            name: q.ItemName,
+          };
+        });
+        //console.log(tp);
         setData(tp);
         //setData(tp);
       })
@@ -57,8 +70,27 @@ const Menu: React.FC = () => {
       q.id === id ? { ...q, qty: Number(ct) } : { ...q }
     );
     setData({ ...tp });
-    console.log(tp);
+   // console.log(tp);
   };
+  const cartPostHandeler=(data:values[])=>{
+    console.log("inside post handeler");
+    let tp=Object.values(data).filter(q=>q.qty!=0);
+    console.log(tp);
+    Axios.post('/cart', {
+      data:tp
+    }).then((res: any) => {
+      console.log(res.data);
+    })
+    .catch((err: any) => {
+      if (err.response) {
+        console.log("Cart Post fetch failure");
+        console.log(err);
+      } else {
+        console.log("not connected to internet");
+      }
+    })
+    .finally(() => console.log("stop loading"));
+  }
   return (
     <>
       <Box
@@ -91,7 +123,7 @@ const Menu: React.FC = () => {
           </Text>
         </Box>
         <Divider orientation="vertical" />
-        <Box d="flex" flexDirection="column">
+        <Box d="flex" flexDirection="column" mt="40">
           <Box
             spacing={10}
             p={7}
@@ -216,6 +248,9 @@ const Menu: React.FC = () => {
               </Flex>
             </Box>
           ))}
+          <Button color="#fff" bg="#CB202D" disabled={price1==0} onClick={()=>cartPostHandeler(data)}>
+            Move to cart!!
+          </Button>
         </Box>
       </Box>
     </>
