@@ -12,23 +12,46 @@ import {
   Flex,
 } from "@chakra-ui/core";
 import CartLogo from "../../../assets/cart2.svg";
+//import axios, { AxiosResponse } from "axios";
 import { Divider } from "@material-ui/core";
-const Menu = () => {
+import Axios from "../../../axios";
+const Menu: React.FC = () => {
   interface values {
     id: String;
     name: String;
     qty: Number;
     price: Number;
   }
+  interface Rec {
+    ItemID:string,
+    ItemPrice:number,
+    ItemName:string,
+    Item_Status:string
+  }
   const [data, setData] = React.useState<values[]>([
-    { id: "Pizza", name: "Pizza", qty: 0, price: 63 },
-    {
-      id: "Burger",
-      name: "Burger",
-      qty: 0,
-      price: 34,
-    },
+   
   ]);
+  React.useEffect(() => {
+    Axios.get("/menu")
+      .then((res: any) => {
+        console.log(res.data);
+        const tp=res.data.map((q:Rec)=>{
+          return {id:String(q.ItemID),qty:0,price:q.ItemPrice,name:q.ItemName};
+        })
+        console.log(tp);
+        setData(tp);
+        //setData(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("menu fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }, []);
   const handleChange = (ct: String, id: String): void => {
     let tp = Object.values(data).map((q) =>
       q.id === id ? { ...q, qty: Number(ct) } : { ...q }
@@ -121,6 +144,7 @@ const Menu = () => {
           </Box>
           {Object.values(data).map((q) => (
             <Box
+              //key={q.id}
               spacing={10}
               p={7}
               ml={10}
@@ -187,7 +211,7 @@ const Menu = () => {
                   alignItems="flex-end"
                   flexDirection="column"
                 >
-                  ₹ {Number(q.price)*Number(q.qty)}
+                  ₹ {Number(q.price) * Number(q.qty)}
                 </Box>
               </Flex>
             </Box>
