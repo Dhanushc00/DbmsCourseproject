@@ -6,11 +6,14 @@ import SignIn from "./screens/Customer/SignInScreen";
 import SignOut from "./screens/Customer/SignUpScreen";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import Routes1 from "./screens/Routes";
+import { Provider } from "react-redux";
+import {store} from './store/store';
 const history = createBrowserHistory();
 
 const Routes: React.FC<{}> = () => {
   //const location =useLocation<unknown|any>();
   return (
+    <Provider store={store}>
     <Router history={history}>
       <Switch>
         <Route exact path="/">
@@ -21,6 +24,7 @@ const Routes: React.FC<{}> = () => {
         </Route>
       </Switch>
     </Router>
+    </Provider>
   );
 };
 

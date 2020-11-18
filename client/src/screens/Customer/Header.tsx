@@ -1,12 +1,14 @@
 import React from "react";
 import { Box, Heading, Flex, Text, Button } from "@chakra-ui/core";
-import {useHistory,Link,useRouteMatch} from 'react-router-dom';
+import {useHistory,Link,useRouteMatch,useLocation} from 'react-router-dom';
 // Note: This code could be better, so I'd recommend you to understand how I solved and you could write yours better :)
 const Header = () => {
   const [show, setShow] = React.useState(false);
   const history=useHistory();
+  const location=useLocation();
   const handleToggle = () => setShow(!show);
   let { path, url } = useRouteMatch();
+  React.useEffect(()=>history.push(`${url}/menu`,location.state),[]);
   return (
     <Flex
       as="nav"
@@ -51,21 +53,15 @@ const Header = () => {
         <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
           Orders
         </Text> */}
-        <Link to={`${url}/menu`}>
-        <Button bg="transparent" border="1px" mr={5}>
+        <Button bg="transparent" border="1px" mr={5} onClick={()=>history.push(`${url}/menu`,location.state)}>
             Menu
         </Button>
-        </Link>
-        <Link to={`${url}/cart`}>
-        <Button bg="transparent" border="1px" mr={5}>
+        <Button bg="transparent" border="1px" mr={5} onClick={()=>history.push(`${url}/cart`,location.state)}>
             Cart
         </Button>
-        </Link>
-        <Link to={`${url}/orders`}>
-        <Button bg="transparent" border="1px" mr={5}>
+        <Button bg="transparent" border="1px" mr={5} onClick={()=>history.push(`${url}/orders`,location.state)}>
             Orders
         </Button>
-        </Link>
       </Box>
 
       {/* <Box

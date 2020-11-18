@@ -16,21 +16,34 @@ import CartLogo from "../../../assets/cart2.svg";
 //import axios, { AxiosResponse } from "axios";
 import { Divider } from "@material-ui/core";
 import Axios from "../../../axios";
-const Menu: React.FC = () => {
+import { useLocation, useHistory, useRouteMatch } from "react-router-dom";
+import swal from 'sweetalert';
+import {useSelector} from 'react-redux';
+import {CustIDAction,CustID,CustIDState} from '../../../store/Cust';
+import {rootReducerType} from '../../../store/store';
+const Menu: React.FC = (props) => {
+  let history = useHistory();
+  const location = useLocation();
+  let { path, url } = useRouteMatch();
+  //console.log(location.state);
+  const id: number = useSelector(
+    (state:rootReducerType) => {console.log(state.CustID.id); return Number(state.CustID.id);},
+  )
   interface values {
-    id: String;
-    name: String;
-    qty: Number;
-    price: Number;
+    id: string;
+    name: string;
+    qty: number;
+    price: number;
   }
   interface Rec {
     ItemID: string;
     ItemPrice: number;
     ItemName: string;
     Item_Status: string;
+    Quantity:number;
   }
   const [data, setData] = React.useState<values[]>([]);
-  let price:number;
+  let price: number;
   React.useEffect(() => {
     price = 0;
     Object.values(data).map((q) => {
@@ -39,14 +52,17 @@ const Menu: React.FC = () => {
     setPrice(price);
   }, [data]);
   const [price1, setPrice] = React.useState<Number>(0);
+
   React.useEffect(() => {
-    Axios.get("/menu")
+    Axios.get("/menu", {
+      params: { CustID: id },
+    })
       .then((res: any) => {
         //console.log(res.data);
         const tp = res.data.map((q: Rec) => {
           return {
             id: String(q.ItemID),
-            qty: 0,
+            qty: isNaN(q.Quantity)?0:Number(q.Quantity),
             price: q.ItemPrice,
             name: q.ItemName,
           };
@@ -70,26 +86,43 @@ const Menu: React.FC = () => {
       q.id === id ? { ...q, qty: Number(ct) } : { ...q }
     );
     setData({ ...tp });
-   // console.log(tp);
+    // console.log(tp);
   };
-  const cartPostHandeler=(data:values[])=>{
+  const cartPostHandeler = (data: values[]) => {
     console.log("inside post handeler");
-    let tp=Object.values(data).filter(q=>q.qty!=0);
+    let tp = Object.values(data).filter((q) => q.qty != 0);
     console.log(tp);
-    Axios.post('/cart', {
-      data:tp
-    }).then((res: any) => {
-      console.log(res.data);
+    Axios.post("/cart/upd", {
+      data: tp,
+      id
     })
-    .catch((err: any) => {
-      if (err.response) {
-        console.log("Cart Post fetch failure");
-        console.log(err);
-      } else {
-        console.log("not connected to internet");
-      }
-    })
-    .finally(() => console.log("stop loading"));
+      .then((res: any) => {
+        console.log(res.data);
+        //swal("Good job!", "You clicked the button!", "success");
+        history.push("/CustApp/cart",location.state);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("Cart Post fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  };
+  if (data.length == 0) {
+    return (
+      <Box
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+        h="87vh"
+        w="100%"
+      >
+        <img width={220} height={220} src={CartLogo} />
+      </Box>
+    );
   }
   return (
     <>
@@ -248,7 +281,12 @@ const Menu: React.FC = () => {
               </Flex>
             </Box>
           ))}
-          <Button color="#fff" bg="#CB202D" disabled={price1==0} onClick={()=>cartPostHandeler(data)}>
+          <Button
+            color="#fff"
+            bg="#CB202D"
+            disabled={price1 == 0}
+            onClick={() => cartPostHandeler(data)}
+          >
             Move to cart!!
           </Button>
         </Box>

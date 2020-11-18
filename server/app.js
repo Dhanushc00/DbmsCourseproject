@@ -11,8 +11,16 @@ app.use(cors());
 app.use('/menu',require('./routes/Menu'));
 app.use('/createDB',require('./routes/CreateDB'));
 app.use('/cart',require('./routes/Cart'));
-
-
-app.listen(3009, () => {
+app.use('/signUP',require('./routes/SignUp'));
+app.use('/signIn',require('./routes/SignIn'));
+app.use('/placeOrder',require('./routes/placeOrder'));
+app.use('/myOrders',require('./routes/myOrders'));
+app.use('/empSignIn',require('./routes/EmpSignIn'));
+app.use('/delAgt',require('./routes/DelAgent'));
+app.use('/deskApp',require('./routes/DeskApp'));
+///DeskApp/Assign
+app.use('/DeskApp',require('./routes/DeskApp'));
+const server=app.listen(3009, () => {
     console.log("Server Started !!");
   });
+server.timeout=12000000;

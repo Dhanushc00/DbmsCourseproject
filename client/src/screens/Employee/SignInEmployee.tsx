@@ -14,25 +14,48 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
-  useToast
+  useToast,
 } from "@chakra-ui/core";
 import "yup-phone";
-import { Router, Route, Switch, useLocation,Redirect,Link ,useHistory} from "react-router-dom";
-import EmpLogo from '../../assets/emp.svg'
-import DelLogo from '../../assets/delivery.svg'
+import {
+  Router,
+  Route,
+  Switch,
+  useLocation,
+  Redirect,
+  Link,
+  useHistory,
+} from "react-router-dom";
+import EmpLogo from "../../assets/emp.svg";
+import DelLogo from "../../assets/delivery.svg";
 import { Divider } from "@material-ui/core";
+import Axios from "../../axios";
+import swal from "sweetalert";
+import {ADD_ID_DA} from '../../store/DeskAgent'
+import {useDispatch} from 'react-redux';
 interface Values {
   EmpId: string;
   Password: string;
 }
 
+interface Ierror {
+  response: {
+    data: {
+      msg: string;
+    };
+  };
+}
+interface Irec {
+  data: { EmpName: string; EmpID: number };
+}
 const App = () => {
   let InitialValues: Values = {
     EmpId: "",
     Password: "",
   };
-  const history=useHistory();
+  const history = useHistory();
   const toast = useToast();
+  const dispatch =useDispatch();
   return (
     <Box
       d="flex"
@@ -42,11 +65,11 @@ const App = () => {
       h="100vh"
     >
       <Box d="flex" flexDirection="row">
-      <img src={EmpLogo} width={100} height={100}/>
-      <Box m={5}></Box>
-      <Divider orientation="vertical"/>
-      <Box m={5}></Box>
-      <img src={DelLogo} width={130} height={130}/>
+        <img src={EmpLogo} width={100} height={100} />
+        <Box m={5}></Box>
+        <Divider orientation="vertical" />
+        <Box m={5}></Box>
+        <img src={DelLogo} width={130} height={130} />
       </Box>
       <Text fontSize="2xl" fontWeight={600} mt={5}>
         Employee Login
@@ -57,18 +80,47 @@ const App = () => {
           values: Values,
           { setSubmitting }: FormikHelpers<Values>
         ) => {
-        //   setTimeout(() => {
-        //     toast({
-        //       title: "Account created.",
-        //       description: "We've created your account for you. Enter OTP to complete verification",
-        //       status: "success",
-        //       duration: 9000,
-        //       isClosable: true,
-        //     })
-        //     //alert(JSON.stringify(values, null, 2));
-        //     setSubmitting(false);
-        //   }, 10);
-          setTimeout(()=>history.push('/otp'),1000)
+          Axios.post("/empSignIn", {
+            ...values,
+          })
+            .then((res: Irec) => {
+              console.log(res.data);
+
+                if(Math.floor(res.data.EmpID/100)==3){
+                  dispatch({type:ADD_ID_DA,id:res.data.EmpID})
+                  setTimeout(() => history.push("/DeskApp"), 1000);
+                }else if(Math.floor(res.data.EmpID/100)==4){
+                  setTimeout(() => history.push("/DeliveryApp"), 1000);
+                }
+             
+            })
+            .catch((err: Ierror) => {
+              console.log(err.response);
+              if (err.response) {
+                console.log("SignIN Post fetch failure");
+                let msg: string = err.response.data.msg;
+                swal("Error", String(msg), "error");
+                console.log(err);
+              } else {
+                swal("Error", "not connected to internet", "error");
+                console.log("not connected to internet", err);
+              }
+            })
+            .finally(() => {
+              console.log("stop loading");
+              setSubmitting(false);
+            });
+          //   setTimeout(() => {
+          //     toast({
+          //       title: "Account created.",
+          //       description: "We've created your account for you. Enter OTP to complete verification",
+          //       status: "success",
+          //       duration: 9000,
+          //       isClosable: true,
+          //     })
+          //     //alert(JSON.stringify(values, null, 2));
+          //     setSubmitting(false);
+          //   }, 10);
         }}
         validationSchema={Yup.object().shape({
           EmpId: Yup.string().required("Enter EmpId"),
@@ -106,7 +158,9 @@ const App = () => {
                 </FormHelperText>
               </FormControl>
               <FormControl
-                isInvalid={Boolean(errors.Password) && Boolean(touched.Password)}
+                isInvalid={
+                  Boolean(errors.Password) && Boolean(touched.Password)
+                }
               >
                 <FormLabel>Password</FormLabel>
                 <Input

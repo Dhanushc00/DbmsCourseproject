@@ -16,7 +16,7 @@ import Menu from './Customer/App/Menu';
 import Cart from './Customer/App/Cart';
 import EmpSignIn from './Employee/SignInEmployee';
 import DeskApp from './Employee/desk/AppDesk';
-import AppDelivery from './Employee/delivery/OrdersPage';
+import AppDelivery from './Employee/delivery/OrdersPageDel';
 const AnimatedSwitch = () => {
   const location = useLocation();
   return (

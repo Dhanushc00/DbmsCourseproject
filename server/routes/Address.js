@@ -40,7 +40,7 @@ router.get("/", (req, res, next) => {
   //console.log("Menu Request---:" + req);
   console.log(req.query.CustID);
   db.query(
-    `select M.ItemName,C.Quantity,M.ItemPrice,C.ItemID from Cart C, Menu M where C.ItemID=M.ItemID and C.CustID=${req.query.CustID};`,
+    `select * from Location where LocID=(select LocID from Customer where CustID=${req.query.CustID});`,
     (err, response) => {
       console.log(String(response));
       return res.status(200).json(response);

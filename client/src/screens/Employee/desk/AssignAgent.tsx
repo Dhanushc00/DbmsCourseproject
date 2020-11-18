@@ -16,8 +16,9 @@ import { useLocation, Link, match,useHistory } from "react-router-dom";
 import CartLogo from "../../../assets/cart2.svg";
 import { Divider } from "@material-ui/core";
 import { useParams } from "react-router";
+import swal from 'sweetalert';
 
-const AssignAgent = () => {
+const AssignAgent:React.FC = () => {
   const location = useLocation();
   // interface ParamTypes {
   //     id: string
@@ -77,7 +78,7 @@ const AssignAgent = () => {
                 >
                   <Box>{q.Empid}</Box>
                   <Box>{q.EmpName}</Box>
-                  <Button bg="#2ECC71" textColor="#fff" onClick={()=>{history.goBack()}}>
+                  <Button bg="#2ECC71" textColor="#fff" onClick={()=>{setTimeout(()=>history.goBack(),2000);swal("Job Assigned", "", "success");}}>
                     Assign
                   </Button>
                 </Box>

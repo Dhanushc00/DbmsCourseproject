@@ -25,6 +25,10 @@ import {
   FormHelperText,
 } from "@chakra-ui/core";
 import "yup-phone";
+import Axios from '../../axios';
+import swal from 'sweetalert';
+import {addID,ADD_ID} from '../../store/Cust'
+import {useDispatch} from 'react-redux';
 interface Values {
   PhNo: string;
 }
@@ -34,6 +38,7 @@ const App = () => {
     PhNo: "",
   };
   let history = useHistory();
+  const dispatch =useDispatch();
   return (
     <Box
       d="flex"
@@ -52,11 +57,27 @@ const App = () => {
           values: Values,
           { setSubmitting }: FormikHelpers<Values>
         ) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-            history.push("/otp");
-          }, 500);
+          Axios.post("/signIn", {
+            ...values
+          })
+            .then((res: any) => {
+              console.log(res.data);
+              dispatch({type:ADD_ID,id:res.data.CustID})
+              //addID(res.data.CustID);
+              setTimeout(()=>history.push('/otp',res.data),1000)
+            })
+            .catch((err: any) => {
+              if (err.response) {
+                console.log("SignIN Post fetch failure");
+                swal("Error", String(err), "error");
+                console.log(err);
+              } else {
+                swal("Error", "not connected to internet", "error");
+                console.log("not connected to internet");
+              }
+              
+            })
+            .finally(() => {console.log("stop loading"); setSubmitting(false);});
         }}
         validationSchema={Yup.object().shape({
           PhNo: Yup.string()

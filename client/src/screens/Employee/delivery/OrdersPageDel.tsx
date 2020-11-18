@@ -23,6 +23,11 @@ import { mdiChevronRight } from "@mdi/js";
 import Header from "./DeliveryHeader";
 import { idText } from "typescript";
 import EmptyLogo from "../../../assets/empty.svg";
+import { useSelector } from "react-redux";
+import Axios from "../../../axios";
+import swal from 'sweetalert';
+//import {CustIDAction,CustID,CustIDState} from '../../../store/Cust';
+import { rootReducerType } from "../../../store/store";
 const Orders = () => {
   function getWidth() {
     return Math.max(
@@ -45,17 +50,103 @@ const Orders = () => {
   //   paymentMethod: String;
   //   Order: values[];
   // }
+  const id: number = useSelector((state: rootReducerType) => {
+    console.log(state.DelID.id);
+    return Number(state.DelID.id);
+  });
+  interface Ivalues {
+    ItemID: number;
+    ItemName: string;
+    ItemPrice: number;
+    Quantity: number;
+    OrderID: number;
+  }
+  interface IRec {
+    data: Ivalues[];
+  }
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = React.useState("COD");
-  const [data1, setData1] = React.useState<values[]>([
-    { id: "Pizza", name: "Pizza", qty: 10, price: 63 },
-    {
-      id: "Burger",
-      name: "Burger",
-      qty: 12,
-      price: 34,
-    },
-  ]);
+  const [data1, setData1] = React.useState<values[]>([]);
+  interface Idetails {
+    EmpID: number;
+    EmpName: string;
+    Phone: string;
+    Gender: string;
+    Joindate: string;
+    Password: string;
+    LocID: number | null;
+    Address: string | null;
+    Landmarks: string | null;
+  }
+  interface IRec2 {
+    data: Idetails;
+  }
+  interface IAddress {
+    address: string | null;
+    landmark: string | null;
+  }
+  const [address, setAddress] = React.useState<IAddress>({
+    address: "",
+    landmark: "",
+  });
+  const [name, setName] = React.useState("");
+  const [orderid, setOrderid] = React.useState(0);
+  React.useEffect(() => {
+    Axios.get("/delAgt/Details", {
+      params: { EmpID: id },
+    })
+      .then((res: IRec2) => {
+        console.log(res);
+        setName(res.data.EmpName);
+        setAddress({ address: res.data.Address, landmark: res.data.Landmarks });
+        // const tp = Object.values(res.data).map((q: Ivalues) => {
+        //   return {
+        //     id: String(q.ItemPrice) + q.ItemName,
+        //     qty: Number(q.Quantity),
+        //     price: q.ItemPrice,
+        //     name: q.ItemName,
+        //   };
+        // });
+        // console.log(tp);
+        // setData1(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("delAgt details fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+    /*------------*/
+    Axios.get("/delAgt", {
+      params: { EmpID: id },
+    })
+      .then((res: IRec) => {
+        setOrderid(res.data[0].OrderID);
+        const tp = res.data.map((q: Ivalues) => {
+          return {
+            id: String(q.ItemPrice) + q.ItemName,
+            qty: Number(q.Quantity),
+            price: q.ItemPrice,
+            name: q.ItemName,
+          };
+        });
+        console.log(tp);
+        setData1(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("delAgt details fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }, []);
   // const [data, setData] = React.useState<Ordervalues[]>([
   //   {
   //     id: "389r9ha",
@@ -88,24 +179,36 @@ const Orders = () => {
   // ]);
   let price: number = 0;
   const [pr, setPr] = React.useState(0);
+  const [isempty, setIsEmpty] = React.useState(data1.length == 0);
   React.useEffect(() => {
     price = 0;
     // if (Object.keys(data1).length != 0) {
     Object.values(data1).map((q) => (price += Number(q.qty) * Number(q.price)));
     // }
     setPr(price);
+    setIsEmpty(data1.length == 0);
     console.log("Rupees" + price);
   }, [data1]);
-  const [isempty, setIsEmpty] = React.useState(data1.length == 0);
   if (isempty) {
     return (
       <>
-      <Header/>
-      <Box d="flex" justifyContent="center" alignItems="center" w="100%" h="87vh" flexDirection="column">
-        <img width={220} height={220} src={EmptyLogo} />
-        <Text fontFamily="monospace" fontSize="2xl" fontWeight={600} pb={8}>. . . Empty . . .</Text>
-        <Text fontFamily="monospace" fontSize="2xl" fontWeight={600} pb={8}>Order will be assigned soon</Text>
-      </Box>
+        <Header />
+        <Box
+          d="flex"
+          justifyContent="center"
+          alignItems="center"
+          w="100%"
+          h="87vh"
+          flexDirection="column"
+        >
+          <img width={220} height={220} src={EmptyLogo} />
+          <Text fontFamily="monospace" fontSize="2xl" fontWeight={600} pb={8}>
+            . . . Empty . . .
+          </Text>
+          <Text fontFamily="monospace" fontSize="2xl" fontWeight={600} pb={8}>
+            Order will be assigned to you soon Mr.{name}
+          </Text>
+        </Box>
       </>
     );
   }
@@ -126,7 +229,7 @@ const Orders = () => {
         flexDirection="column"
       >
         <Text fontFamily="monospace" fontSize="2xl" fontWeight={600} pb={8}>
-          Delivery Order
+          Please deliver this order to the Address given below Mr.{name}
         </Text>
         <Box
           borderWidth={4}
@@ -225,11 +328,33 @@ const Orders = () => {
               mt={5}
             ></Box>
           </Box>
-          <Box p={1}>Delivery Address : {"Delivery address"}</Box>
+          <Box p={1}>Delivery Address : {address.address}</Box>
           <Box p={1} pb={2}>
-            LandMark : {"Delivery address"}
+            LandMark : {address.landmark}
           </Box>
-          <Button bg="#2ECC71" textColor="#fff">
+          <Button
+            bg="#2ECC71"
+            textColor="#fff"
+            onClick={() => {
+              Axios.get("/delAgt/Delivered", {
+                params: { EmpID: id, OrderID: orderid },
+              })
+                .then((res: IRec) => {
+                  console.log(res);
+                  setData1([]);
+                  swal("Delivered", "", "success");
+                })
+                .catch((err: any) => {
+                  if (err.response) {
+                    console.log("delAgt details fetch failure");
+                    console.log(err);
+                  } else {
+                    console.log("not connected to internet");
+                  }
+                })
+                .finally(() => console.log("stop loading"));
+            }}
+          >
             {" "}
             Delivered
           </Button>

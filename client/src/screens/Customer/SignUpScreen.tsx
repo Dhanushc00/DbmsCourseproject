@@ -18,6 +18,10 @@ import {
 } from "@chakra-ui/core";
 import "yup-phone";
 import { Router, Route, Switch, useLocation,Redirect,Link ,useHistory} from "react-router-dom";
+import Axios from '../../axios';
+import swal from 'sweetalert';
+import {addID,ADD_ID} from '../../store/Cust'
+import {useDispatch} from 'react-redux';
 interface Values {
   Name: string;
   PhNo: string;
@@ -33,6 +37,7 @@ const App = () => {
     Landmark:"",
   };
   const history=useHistory();
+  const dispatch =useDispatch();
   const toast = useToast();
   return (
     <Box
@@ -52,18 +57,37 @@ const App = () => {
           values: Values,
           { setSubmitting }: FormikHelpers<Values>
         ) => {
-          setTimeout(() => {
-            toast({
-              title: "Account created.",
-              description: "We've created your account for you. Enter OTP to complete verification",
-              status: "success",
-              duration: 9000,
-              isClosable: true,
+          Axios.post("/signUP", {
+            ...values
+          })
+            .then((res: any) => {
+              console.log(res.data);
+              dispatch({type:ADD_ID,id:res.data.id})
+              setTimeout(() => {
+                toast({
+                  title: "Account created.",
+                  description: "We've created your account for you. Enter OTP to complete verification",
+                  status: "success",
+                  duration: 9000,
+                  isClosable: true,
+                })
+                //alert(JSON.stringify(values, null, 2));
+                setSubmitting(false);
+              }, 10);
+              setTimeout(()=>history.push('/otp',res.data.id),1000)
             })
-            //alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 10);
-          setTimeout(()=>history.push('/otp'),1000)
+            .catch((err: any) => {
+              if (err.response) {
+                console.log("SignIn Post fetch failure");
+                swal("Error", String(err), "error");
+                console.log(err);
+              } else {
+                swal("Error", "not connected to internet", "error");
+                console.log("not connected to internet");
+              }
+            })
+            .finally(() => console.log("stop loading"));
+         
         }}
         validationSchema={Yup.object().shape({
           Name: Yup.string().required("Enter Name").required(),
@@ -142,7 +166,7 @@ const App = () => {
                   type="string"
                   id="Landmark"
                   value={values.Landmark}
-                  placeholder="Address Line 2"
+                  placeholder="Landmark (Not Required)"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   aria-describedby="email-helper-text"

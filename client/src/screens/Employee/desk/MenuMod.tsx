@@ -16,10 +16,13 @@ import {
 import CartLogo from "../../../assets/cart2.svg";
 import MenuLogo from '../../../assets/menumod.svg';
 import MaterialTable from "material-table";
+import swal from 'sweetalert';
 const Menu = () => {
   interface values {
+    id:number,
     name: string;
     Price: number;
+    Avl:string,
   }
   type IType =
     | "string"
@@ -71,13 +74,26 @@ const Menu = () => {
       },
       type: string,
     },
+    {
+      title: "Availability",
+      field: "Avl",
+      validate: (rowData: any) => {
+        try {
+          return !(rowData.Avl=='Y'||rowData.Avl=='N') ? "Must be a Y or N" : "";
+        } catch (e: any) {
+          return "";
+        }
+      },
+      type: string,
+    },
   ]);
 
   const [data, setData] = React.useState<values[] | any | undefined>([
-    { name: "Pizza", Price: 63 },
-    { name: "Burger", Price: 34 },
+    {id:101, name: "Pizza", Price: 63 ,Avl:'Y'},
+    {id:102,name: "Burger", Price: 34 ,Avl:'N'},
   ]);
-
+  
+React.useEffect(()=>{},[]);
   //   const handleChange = (ct: String, id: String): void => {
   //     let tp = Object.values(data).map((q) =>
   //       q.id === id ? { ...q, qty: Number(ct) } : { ...q }

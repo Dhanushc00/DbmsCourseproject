@@ -14,16 +14,26 @@ import {
 } from "@chakra-ui/core";
 import "yup-phone";
 import {v4 as uuidv4} from 'uuid';
-import { useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 import OtpLogo from '../../assets/otp.svg';
+import { Dispatch } from "redux"
+import { useDispatch } from "react-redux"
+
 interface Values {
   OTP: string;
 }
-
-const App = () => {
+interface LocationState {
+  from: {
+    pathname: string;
+  };
+  state: {CustID:number;};
+}
+const App:React.FC = () => {
+    const location=useLocation<LocationState>();
     const [OTP2,setOTP2]=React.useState<String>(uuidv4().substr(0,6));
     const toast = useToast();
     const history=useHistory();
+    const dispatch: Dispatch<any> = useDispatch();
     React.useEffect(() => {
         setTimeout(() => {
             console.log(OTP2);
@@ -52,7 +62,9 @@ const App = () => {
                 isClosable: true,
               })
             //alert(JSON.stringify(values, null, 2));
-            history.push('./CustApp/menu')
+            // const id:number=location.state.CustID;
+            // addID({id});
+            history.push('./CustApp',location.state);
             setSubmitting(false);
           }, 100);
         }}
