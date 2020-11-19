@@ -30,10 +30,14 @@ import Moment from "moment";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { mdiChevronRight } from "@mdi/js";
 import AssignAgent from "./AssignAgent";
+import Axios from '../../../axios';
+import {rootReducerType} from '../../../store/store';
+import {useSelector} from 'react-redux';
 const Assign = () => {
   const location = useLocation();
   let history = useHistory();
   let { path, url } = useRouteMatch();
+  React.useEffect(()=>{},[location,history]);
   function getWidth() {
     return Math.max(
       document.body.scrollWidth,
@@ -50,44 +54,23 @@ const Assign = () => {
     price: Number;
   }
   interface Ordervalues {
-    id: String;
+    id: number;
     timestamp: String;
-    paymentMethod: String;
-    Order: values[];
+    //paymentMethod: String;
+    //Order: values[];
   }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = React.useState("COD");
-  const [data1, setData1] = React.useState<values[]>([]);
-  const [data, setData] = React.useState<Ordervalues[]>([
+  const [data1, setData1] = React.useState<values[]>([
+    { id: "Pizza", name: "Pizza", qty: 10, price: 63 },
     {
-      id: "389r9ha",
-      timestamp: Moment().format("lll"),
-      paymentMethod: "UPI",
-      Order: [
-        { id: "Pizza", name: "Pizza", qty: 10, price: 63 },
-        {
-          id: "Burger",
-          name: "Burger",
-          qty: 12,
-          price: 34,
-        },
-      ],
-    },
-    {
-      id: "98shsgd",
-      timestamp: Moment().format("lll"),
-      paymentMethod: "Card",
-      Order: [
-        { id: "Pasta", name: "Pasta", qty: 10, price: 63 },
-        {
-          id: "Veg Burger",
-          name: "Veg Burger",
-          qty: 10,
-          price: 34,
-        },
-      ],
+      id: "Burger",
+      name: "Burger",
+      qty: 12,
+      price: 34,
     },
   ]);
+  const [data, setData] = React.useState<Ordervalues[]>([]);
   let price: number = 0;
   const [pr, setPr] = React.useState(0);
   React.useEffect(() => {
@@ -98,7 +81,55 @@ const Assign = () => {
     setPr(price);
     console.log("Rupees" + price);
   }, [data1]);
-
+  const id: number = useSelector(
+    (state:rootReducerType) => {console.log(state.DeskID.id); return Number(state.DeskID.id);},
+  )
+  interface IRec{
+      OrderID: number,
+      OrderTimeStamp: string
+  }
+  interface IData{
+    data:IRec[],
+  }
+  React.useEffect(()=>{
+    Axios.get("/deskApp", {
+      params: { DeskID: id },
+    })
+      .then((res: IData) => {
+        //console.log(res.data);
+        const tp = res.data.map((q: IRec) => {
+          return {
+            id: q.OrderID,
+            timestamp:String(Moment(q.OrderTimeStamp).format('lll'))
+          };
+        });
+        //console.log(tp);
+        setData(tp);
+        //setData(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("deskApp fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  },[]);
+  if (data.length == 0) {
+    return (
+      <Box
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+        h="87vh"
+        w="100%"
+      >
+        <img width={220} height={220} src={ApproveLogo} />
+      </Box>
+    );
+  }
   let paymentModal = (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
@@ -207,7 +238,41 @@ const Assign = () => {
       </Modal>
     </>
   );
-  const [order, setOrder] = React.useState("");
+  interface RecItems {
+    ItemName: string;
+    Quantity: number;
+    ItemPrice: number;
+    Payment_Amt: number;
+    Payment_method: string;
+  }
+  interface IRecItems{
+    data:RecItems[]
+  }
+  //const [order, setOrder] = React.useState("");
+  const fetchOrderDetail=(id:number)=>{
+    Axios.get("/myOrders/Items", {
+      params: { OrderID: id },
+    })
+      .then((res: IRecItems) => {
+        console.log(res.data);
+        let tp = res.data.map((q: RecItems) => ({
+          id: q.ItemName+q.ItemPrice,
+          name: q.ItemName,
+          qty: q.Quantity,
+          price:q.ItemPrice,
+        }));
+        setData1(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("deskApp fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }
   return (
     <>
       {paymentModal}
@@ -290,9 +355,10 @@ const Assign = () => {
                     borderColor="#fff"
                     borderWidth="2"
                     onClick={() => {
-                      setData1(q.Order);
+                      //setData1(q.Order);
+                      fetchOrderDetail(q.id);
                       onOpen();
-                      setValue(String(q.paymentMethod));
+                      //setValue(String(q.paymentMethod));
                     }}
                   >
                     View Full Bill

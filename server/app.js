@@ -18,6 +18,7 @@ app.use('/myOrders',require('./routes/myOrders'));
 app.use('/empSignIn',require('./routes/EmpSignIn'));
 app.use('/delAgt',require('./routes/DelAgent'));
 app.use('/deskApp',require('./routes/DeskApp'));
+app.use('/address',require('./routes/Address'));
 ///DeskApp/Assign
 app.use('/DeskApp',require('./routes/DeskApp'));
 const server=app.listen(3009, () => {

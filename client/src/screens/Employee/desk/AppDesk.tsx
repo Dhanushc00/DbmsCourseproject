@@ -10,7 +10,7 @@ import {
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import Header from './DeskHeader';
 import MenuMod from './MenuMod';
-import Assign from './ViewOrders';
+import Assign from './Assign';
 const AnimatedSwitch = () => {
   const location = useLocation();
   let { path, url } = useRouteMatch();

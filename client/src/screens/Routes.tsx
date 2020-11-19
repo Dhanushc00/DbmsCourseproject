@@ -23,7 +23,7 @@ const AnimatedSwitch = () => {
     <div>
       {/* <TransitionGroup>
         <CSSTransition key={location.key} classNames="slide" timeout={10}> */}
-          <Switch location={location}>
+          <Switch location={location} >
             <Route path="/signinc"  render={() => <SignIn />} exact />
             <Route path="/signoutc" render={() => <SignOut />} exact/>
             <Route path="/otp" render={() => <Otp />} exact/>

@@ -31,7 +31,8 @@ import DelLogo from "../../assets/delivery.svg";
 import { Divider } from "@material-ui/core";
 import Axios from "../../axios";
 import swal from "sweetalert";
-import {ADD_ID_DA} from '../../store/DeskAgent'
+import {ADD_ID_DA} from '../../store/DeskAgent';
+import {ADD_ID_DelA} from '../../store/DelAgent';
 import {useDispatch} from 'react-redux';
 interface Values {
   EmpId: string;
@@ -85,14 +86,13 @@ const App = () => {
           })
             .then((res: Irec) => {
               console.log(res.data);
-
                 if(Math.floor(res.data.EmpID/100)==3){
                   dispatch({type:ADD_ID_DA,id:res.data.EmpID})
                   setTimeout(() => history.push("/DeskApp"), 1000);
                 }else if(Math.floor(res.data.EmpID/100)==4){
+                  dispatch({type:ADD_ID_DelA,id:res.data.EmpID})
                   setTimeout(() => history.push("/DeliveryApp"), 1000);
                 }
-             
             })
             .catch((err: Ierror) => {
               console.log(err.response);

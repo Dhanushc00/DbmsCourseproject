@@ -8,6 +8,8 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import {useDispatch} from 'react-redux';
+import {ADD_ID_DelA} from '../../../store/DelAgent';
 //import MenuMod from "./MenuMod";
 // Note: This code could be better, so I'd recommend you to understand how I solved and you could write yours better :)
 const Header = () => {
@@ -16,6 +18,7 @@ const Header = () => {
   const history = useHistory();
   const handleToggle = () => setShow(!show);
   let { path, url } = useRouteMatch();
+  const dispatch=useDispatch();
   return (
     <>
       <Flex
@@ -45,14 +48,14 @@ const Header = () => {
           </svg>
         </Box>
 
-        {/* <Box
+        <Box
         display={{ sm: show ? "block" : "none", md: "block" }}
         mt={{ base: 4, md: 0 }}
       >
-        <Button bg="transparent" border="1px">
-          Create account
+        <Button bg="transparent" border="1px" onClick={()=>{dispatch({type:ADD_ID_DelA,id:0});history.push('/EmpSignIn')}}>
+          Log Out
         </Button>
-      </Box> */}
+      </Box>
       </Flex>
     </>
   );

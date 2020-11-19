@@ -30,6 +30,7 @@ import swal from "sweetalert";
 import Axios from "../../../axios";
 import { rootReducerType } from "../../../store/store";
 import { useSelector } from "react-redux";
+
 export default function Cart() {
   const toast = useToast();
   const history = useHistory();
@@ -72,6 +73,7 @@ export default function Cart() {
 
   let price: number = 0;
   const [pr, setPr] = React.useState(0);
+  const [vl,setVl]=React.useState(false);
   React.useEffect(() => {
     price = 0;
     // if (Object.keys(data1).length != 0) {
@@ -84,6 +86,7 @@ export default function Cart() {
     console.log(state.CustID);
     return Number(state.CustID.id);
   });
+
   React.useEffect(() => {
     Axios.get("/cart", {
       params: { CustID: id },
@@ -97,6 +100,7 @@ export default function Cart() {
           price: q.ItemPrice,
         }));
         setData(tp);
+        setVl(!vl);
       })
       .catch((err: any) => {
         if (err.response) {
@@ -109,25 +113,27 @@ export default function Cart() {
         }
       })
       .finally(() => console.log("stop loading"));
-      Axios.get("/address", {
-        params: { CustID: id },
-      })
-        .then((res: any) => {
-          console.log(res.data);
-          setAddress(res.data[0].Address);
-        })
-        .catch((err: any) => {
-          if (err.response) {
-            console.log("Address GET fetch failure");
-            swal("Error", String(err), "error");
-            console.log(err);
-          } else {
-            swal("Error", "not connected to internet", "error");
-            console.log("not connected to internet");
-          }
-        })
-        .finally(() => console.log("stop loading"));
   }, []);
+  React.useEffect(()=>{
+    Axios.get("/address", {
+      params: { CustID: id },
+    })
+      .then((res: any) => {
+        console.log(res.data);
+        setAddress(res.data[0].Address);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("Address GET fetch failure");
+          swal("Error", String(err), "error");
+          console.log(err);
+        } else {
+          swal("Error", "not connected to internet", "error");
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  },[data]);
   let paymentModal = (
     <>
       {/* <Button onClick={onOpen}>Open Modal</Button> */}

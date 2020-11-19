@@ -39,7 +39,7 @@ export function addID(CustID: CustIDState) {
     }
   }
 
-  const initialState: CustIDState = { id: 101 };
+  const initialState: CustIDState = { id: 0 };
 
   const reducer = (
     state: CustIDState = initialState,

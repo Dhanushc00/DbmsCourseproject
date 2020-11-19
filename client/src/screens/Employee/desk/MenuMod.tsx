@@ -17,6 +17,7 @@ import CartLogo from "../../../assets/cart2.svg";
 import MenuLogo from '../../../assets/menumod.svg';
 import MaterialTable from "material-table";
 import swal from 'sweetalert';
+import Axios from '../../../axios';
 const Menu = () => {
   interface values {
     id:number,
@@ -89,11 +90,41 @@ const Menu = () => {
   ]);
 
   const [data, setData] = React.useState<values[] | any | undefined>([
-    {id:101, name: "Pizza", Price: 63 ,Avl:'Y'},
+    {id:101,name: "Pizza", Price: 63 ,Avl:'Y'},
     {id:102,name: "Burger", Price: 34 ,Avl:'N'},
   ]);
-  
-React.useEffect(()=>{},[]);
+  interface val {
+    ItemID: number,
+    ItemPrice: number,
+    ItemName: string,
+    Item_Status: string,
+}
+  interface IValue{
+    data:val[],
+  }
+React.useEffect(()=>{
+  Axios.get("/deskApp/menu", {
+  })
+    .then((res: IValue) => {
+      console.log(res.data);
+      let tp = res.data.map((q: val) => ({
+        id: q.ItemID,
+        name:q.ItemName,
+        Price:q.ItemPrice,
+        Avl:q.Item_Status=='avl'?'Y':'N'
+      }));
+      setData(tp);
+    })
+    .catch((err: any) => {
+      if (err.response) {
+        console.log("myOrders get fetch failure");
+        console.log(err);
+      } else {
+        console.log("not connected to internet");
+      }
+    })
+    .finally(() => console.log("stop loading"));
+},[]);
   //   const handleChange = (ct: String, id: String): void => {
   //     let tp = Object.values(data).map((q) =>
   //       q.id === id ? { ...q, qty: Number(ct) } : { ...q }
@@ -101,7 +132,83 @@ React.useEffect(()=>{},[]);
   //     setData({ ...tp });
   //     console.log(tp);
   //   };
-
+  const updMen=(dt:values)=>{
+    console.log(dt);
+    Axios.post("/deskApp/updmenu", {
+      ...dt
+    })
+      .then((res: IValue) => {
+          //window.location.reload(true);
+          let tp = res.data.map((q: val) => ({
+            id: q.ItemID,
+            name:q.ItemName,
+            Price:q.ItemPrice,
+            Avl:q.Item_Status=='avl'?'Y':'N'
+          }));
+          setData(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("updmenu post fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }
+  const addMen=(dt:values)=>{
+    console.log(dt);
+    Axios.put("/deskApp/updmenu", {
+      ...dt
+    })
+      .then((res: IValue) => {
+          //window.location.reload(true);
+          let tp = res.data.map((q: val) => ({
+            id: q.ItemID,
+            name:q.ItemName,
+            Price:q.ItemPrice,
+            Avl:q.Item_Status=='avl'?'Y':'N'
+          }));
+          setData(tp);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          console.log("updmenu post fetch failure");
+          console.log(err);
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }
+  const delMen=(dt:values)=>{
+    console.log(dt);
+    Axios.delete("/deskApp/updmenu", {
+      data:{...dt}
+    })
+      .then((res: IValue) => {
+          //window.location.reload(true);
+          let tp = res.data.map((q: val) => ({
+            id: q.ItemID,
+            name:q.ItemName,
+            Price:q.ItemPrice,
+            Avl:q.Item_Status=='avl'?'Y':'N'
+          }));
+          setData(tp);
+          console.log(res.data);
+      })
+      .catch((err: any) => {
+        if (err.response) {
+          //swal("Error delete",err.data.msg,"error")
+          console.log("updmenu del fetch failure");
+          swal("Error", "cannot delete this Item", "error");
+        } else {
+          console.log("not connected to internet");
+        }
+      })
+      .finally(() => console.log("stop loading"));
+  }
   return (
     <Box d="flex" justifyContent="center" alignItems="center">
         {/* <Box mt={100} w="40%" d="flex" justifyContent="center" alignItems="center">
@@ -121,8 +228,8 @@ React.useEffect(()=>{},[]);
           onRowAdd: (newData) =>
             new Promise((resolve, reject) => {
               setTimeout(() => {
-                setData([...data, newData]);
-
+                //setData([...data, newData]);
+                addMen(newData);
                 resolve();
               }, 1000);
             }),
@@ -132,7 +239,8 @@ React.useEffect(()=>{},[]);
                 const dataUpdate = [...data];
                 const index = oldData.tableData.id;
                 dataUpdate[index] = newData;
-                setData([...dataUpdate]);
+                //setData([...dataUpdate]);
+                updMen(newData);
                 resolve();
               }, 1000);
             }),
@@ -141,8 +249,10 @@ React.useEffect(()=>{},[]);
               setTimeout(() => {
                 const dataDelete = [...data];
                 const index = oldData.tableData.id;
-                dataDelete.splice(index, 1);
-                setData([...dataDelete]);
+                //dataDelete.splice(index, 1);
+                //setData([...dataDelete]);
+                console.log(dataDelete[index]);
+                delMen(dataDelete[index]);
                 resolve();
               }, 1000);
             }),

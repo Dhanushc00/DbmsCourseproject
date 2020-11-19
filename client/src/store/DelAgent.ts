@@ -9,9 +9,9 @@ export type DelAgtIDAction = {
     id: DelAgtID
 }
   
-type DispatchType = (args: DelAgtIDAction) => DelAgtIDAction
+type DispatchType = (args: DelAgtIDAction) => DelAgtIDAction;
 
-export const ADD_ID_DelA = "ADD_ID_DelA"
+export const ADD_ID_DelA = "ADD_ID_DelA";
 
 
 export function addID(DelAgtID: DelAgtIDState) {
@@ -39,7 +39,7 @@ export function addID(DelAgtID: DelAgtIDState) {
     }
   }
 
-  const initialState: DelAgtIDState = { id: 101 };
+  const initialState: DelAgtIDState = { id: 0 };
 
   const reducer = (
     state: DelAgtIDState = initialState,

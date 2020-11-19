@@ -39,7 +39,7 @@ export function addID(DeskAgtID: DeskAgtIDState) {
     }
   }
 
-  const initialState: DeskAgtIDState = { id: 301 };
+  const initialState: DeskAgtIDState = { id: 0 };
 
   const reducer = (
     state: DeskAgtIDState = initialState,

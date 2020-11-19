@@ -9,6 +9,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import MenuMod from "./MenuMod";
+import {ADD_ID_DA} from '../../../store/DeskAgent';
+import {ADD_ID_DelA} from '../../../store/DelAgent'; 
+import {useDispatch,useSelector} from 'react-redux';
+import { rootReducerType } from "../../../store/store";
+
 // Note: This code could be better, so I'd recommend you to understand how I solved and you could write yours better :)
 const Header = () => {
   const location = useLocation();
@@ -16,6 +21,9 @@ const Header = () => {
   const history = useHistory();
   const handleToggle = () => setShow(!show);
   let { path, url } = useRouteMatch();
+  const dispatch =useDispatch();
+
+
   return (
     <>
       <Flex
@@ -69,6 +77,11 @@ const Header = () => {
           <Link to={`${url}/MenuMod`}>
             <Button bg="transparent" border="1px" mr={5}>
               Modify Menu
+            </Button>
+          </Link>
+          <Link to={`/EmpSignIn`}>
+            <Button bg="#6d56d8" onClick={()=>{dispatch({type:ADD_ID_DA,id:0});dispatch({type:ADD_ID_DelA,id:0});}} border="1px" mr={5}>
+              LogOut
             </Button>
           </Link>
           {/* <Link to={`${url}/orders`}>

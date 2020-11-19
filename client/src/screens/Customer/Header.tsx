@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Heading, Flex, Text, Button } from "@chakra-ui/core";
 import {useHistory,Link,useRouteMatch,useLocation} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {ADD_ID} from '../../store/Cust';
 // Note: This code could be better, so I'd recommend you to understand how I solved and you could write yours better :)
 const Header = () => {
   const [show, setShow] = React.useState(false);
@@ -9,6 +11,7 @@ const Header = () => {
   const handleToggle = () => setShow(!show);
   let { path, url } = useRouteMatch();
   React.useEffect(()=>history.push(`${url}/menu`,location.state),[]);
+  const dispatch = useDispatch();
   return (
     <Flex
       as="nav"
@@ -61,6 +64,9 @@ const Header = () => {
         </Button>
         <Button bg="transparent" border="1px" mr={5} onClick={()=>history.push(`${url}/orders`,location.state)}>
             Orders
+        </Button>
+        <Button bg="#2D2D2D" border="1px" mr={5} onClick={()=>{history.push('/signinc');dispatch({type:ADD_ID,id:0})}}>
+            LogOut
         </Button>
       </Box>
 
