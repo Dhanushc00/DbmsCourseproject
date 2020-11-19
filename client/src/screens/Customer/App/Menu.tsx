@@ -156,7 +156,7 @@ const Menu: React.FC = (props) => {
           </Text>
         </Box>
         <Divider orientation="vertical" />
-        <Box d="flex" flexDirection="column" mt="40">
+        <Box d="flex" flexDirection="column" mt={300}>
           <Box
             spacing={10}
             p={7}

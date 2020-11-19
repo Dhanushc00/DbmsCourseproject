@@ -15,7 +15,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/core";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch,useLocation } from "react-router-dom";
 import OrderLogo from "../../../assets/orderr.svg";
 import Moment from "moment";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -26,9 +26,13 @@ import EmptyLogo from "../../../assets/empty.svg";
 import { useSelector } from "react-redux";
 import Axios from "../../../axios";
 import swal from 'sweetalert';
+
 //import {CustIDAction,CustID,CustIDState} from '../../../store/Cust';
 import { rootReducerType } from "../../../store/store";
 const Orders = () => {
+  const location=useLocation();
+  console.log(location.state);
+  let id:number|unknown=location.state;
   function getWidth() {
     return Math.max(
       document.body.scrollWidth,
@@ -50,10 +54,10 @@ const Orders = () => {
   //   paymentMethod: String;
   //   Order: values[];
   // }
-  const id: number = useSelector((state: rootReducerType) => {
-    console.log(state.DelID.id);
-    return Number(state.DelID.id);
-  });
+  // const id: number = useSelector((state: rootReducerType) => {
+  //   console.log(state.DelID.id);
+  //   return Number(state.DelID.id);
+  // });
   interface Ivalues {
     ItemID: number;
     ItemName: string;
@@ -69,26 +73,23 @@ const Orders = () => {
   const [value, setValue] = React.useState("COD");
   const [data1, setData1] = React.useState<values[]>([]);
   interface Idetails {
-    EmpID: number;
-    EmpName: string;
-    Phone: string;
-    Gender: string;
-    Joindate: string;
-    Password: string;
-    LocID: number | null;
-    Address: string | null;
-    Landmarks: string | null;
-  }
+    Address: string,
+    Landmarks: string,
+    Phone_no: string,
+    EmpName: string
+}
   interface IRec2 {
     data: Idetails;
   }
   interface IAddress {
     address: string | null;
     landmark: string | null;
+    phoneno:string|null;
   }
   const [address, setAddress] = React.useState<IAddress>({
     address: "",
     landmark: "",
+    phoneno:""
   });
   const [name, setName] = React.useState("");
   const [orderid, setOrderid] = React.useState(0);
@@ -99,7 +100,7 @@ const Orders = () => {
       .then((res: IRec2) => {
         console.log(res);
         setName(res.data.EmpName);
-        setAddress({ address: res.data.Address, landmark: res.data.Landmarks });
+        setAddress({address: res.data.Address, landmark: res.data.Landmarks,phoneno:res.data.Phone_no});
         // const tp = Object.values(res.data).map((q: Ivalues) => {
         //   return {
         //     id: String(q.ItemPrice) + q.ItemName,
@@ -331,6 +332,9 @@ const Orders = () => {
           <Box p={1}>Delivery Address : {address.address}</Box>
           <Box p={1} pb={2}>
             LandMark : {address.landmark}
+          </Box>
+          <Box p={1} pb={2}>
+            Customer PhoneNo : {address.phoneno}
           </Box>
           <Button
             bg="#2ECC71"

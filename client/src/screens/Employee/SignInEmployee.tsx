@@ -89,9 +89,10 @@ const App = () => {
                 if(Math.floor(res.data.EmpID/100)==3){
                   dispatch({type:ADD_ID_DA,id:res.data.EmpID})
                   setTimeout(() => history.push("/DeskApp"), 1000);
-                }else if(Math.floor(res.data.EmpID/100)==4){
-                  dispatch({type:ADD_ID_DelA,id:res.data.EmpID})
-                  setTimeout(() => history.push("/DeliveryApp"), 1000);
+                }else if(Math.floor(res.data.EmpID/100)==5){
+                  dispatch({type:ADD_ID_DelA , id:res.data.EmpID})
+                  console.log(res.data.EmpID);
+                  setTimeout(() => history.push("/DeliveryApp",res.data.EmpID), 1000);
                 }
             })
             .catch((err: Ierror) => {

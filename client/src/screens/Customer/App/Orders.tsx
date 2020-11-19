@@ -24,7 +24,6 @@ import {
   InputRightElement,
   useToast,
   IconButton,
-  Icon,
 } from "@chakra-ui/core";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import OrderLogo from "../../../assets/orderr.svg";
@@ -35,6 +34,8 @@ import Axios from "../../../axios";
 import swal from "sweetalert";
 import { rootReducerType } from "../../../store/store";
 import { useSelector } from "react-redux";
+import { mdiCheckDecagram } from "@mdi/js";
+import Icon from "@mdi/react";
 const Orders = () => {
   function getWidth() {
     return Math.max(
@@ -55,22 +56,12 @@ const Orders = () => {
     id: number;
     timestamp: string;
     paymentMethod: string;
+    status: string;
   }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = React.useState("COD");
   const [data1, setData1] = React.useState<values[]>([]);
-  const [data, setData] = React.useState<Ordervalues[]>([
-    {
-      id: 101,
-      timestamp: Moment().format("lll"),
-      paymentMethod: "UPI",
-    },
-    {
-      id: 102,
-      timestamp: Moment().format("lll"),
-      paymentMethod: "Card",
-    },
-  ]);
+  const [data, setData] = React.useState<Ordervalues[]>([]);
   let price: number = 0;
   const [pr, setPr] = React.useState(0);
   React.useEffect(() => {
@@ -85,6 +76,7 @@ const Orders = () => {
     OrderID: number;
     OrderTimeStamp: string;
     Payment_method: string;
+    Status: string;
   }
   interface RecItems {
     ItemName: string;
@@ -99,7 +91,7 @@ const Orders = () => {
   });
   React.useEffect(() => {
     Axios.get("/myOrders", {
-      params: { CustID: id  },
+      params: { CustID: id },
     })
       .then((res: any) => {
         console.log(res.data);
@@ -107,6 +99,7 @@ const Orders = () => {
           id: q.OrderID,
           timestamp: Moment(q.OrderTimeStamp).format("lll"),
           paymentMethod: q.Payment_method,
+          status: q.Status,
         }));
         setData(tp);
       })
@@ -120,17 +113,17 @@ const Orders = () => {
       })
       .finally(() => console.log("stop loading"));
   }, []);
-  const OrderfetchHandeler = (id1: number):void => {
+  const OrderfetchHandeler = (id1: number): void => {
     Axios.get("/myOrders/Items", {
       params: { OrderID: id1 },
     })
       .then((res: any) => {
         console.log(res.data);
         let tp = res.data.map((q: RecItems) => ({
-          id: q.ItemName+q.ItemPrice,
+          id: q.ItemName + q.ItemPrice,
           name: q.ItemName,
           qty: q.Quantity,
-          price:q.ItemPrice,
+          price: q.ItemPrice,
         }));
         setData1(tp);
       })
@@ -287,70 +280,89 @@ const Orders = () => {
         <Divider orientation="vertical" />
         <Box d="flex" flexDirection="column">
           {Object.values(data).map((q) => (
-            <Button
-              bg="#505050"
-              color="#fff"
-              spacing={10}
-              p={7}
-              m={2}
-              borderWidth="1px"
-              flex="1"
-              rounded="md"
-              //w="50%"
-              onClick={() => {
-                OrderfetchHandeler(q.id);
-                //setData1(q.Order);
-                onOpen();
-                setValue(String(q.paymentMethod));
-              }}
-              justifyContent="space-between"
+            <Box
+              d="flex"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
             >
-              <Flex
-                flexDirection="row"
-                alignSelf="center"
+              {q.status == "DL" ? (
+                <Icon
+                  path={mdiCheckDecagram}
+                  //title="User Profile"
+                  size={1}
+                  horizontal
+                  vertical
+                  rotate={180}
+                  color="#00ff00"
+                  //spin
+                />
+              ) : null}
+              <Button
+                bg="#505050"
+                color="#fff"
+                spacing={10}
+                p={7}
+                m={2}
+                borderWidth="1px"
+                flex="1"
+                rounded="md"
+                //w="50%"
+                onClick={() => {
+                  OrderfetchHandeler(q.id);
+                  //setData1(q.Order);
+                  onOpen();
+                  setValue(String(q.paymentMethod));
+                }}
                 justifyContent="space-between"
               >
-                <Box
-                  height="3px"
-                  d="flex"
-                  justifyContent="center"
-                  flexDirection="column"
-                  alignSelf="flex-start"
-                  fontWeight="600"
-                  pr={200}
-                  fontFamily={"monospace"}
-                >
-                  Order Name: {q.id}
-                </Box>
-                <Box
-                  height="3px"
-                  d="flex"
-                  justifyContent="center"
-                  flexDirection="column"
-                  fontWeight="600"
-                  alignSelf="flex-end"
-                  fontFamily={"monospace"}
-                >
-                  {q.timestamp}
-                </Box>
-                <Box
-                  height="3px"
-                  d="flex"
-                  justifyContent="center"
-                  flexDirection="column"
-                  fontWeight="600"
-                  alignSelf="flex-end"
-                  fontFamily={"monospace"}
-                  ml={5}
+                <Flex
+                  flexDirection="row"
+                  alignSelf="center"
+                  justifyContent="space-between"
                 >
                   <Box
-                    as={MdKeyboardArrowRight}
-                    size="32px"
-                    color="green.400"
-                  />
-                </Box>
-              </Flex>
-            </Button>
+                    height="3px"
+                    d="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    alignSelf="flex-start"
+                    fontWeight="600"
+                    pr={200}
+                    fontFamily={"monospace"}
+                  >
+                    Order Name: {q.id}
+                  </Box>
+                  <Box
+                    height="3px"
+                    d="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    fontWeight="600"
+                    alignSelf="flex-end"
+                    fontFamily={"monospace"}
+                  >
+                    {q.timestamp}
+                  </Box>
+                  <Box
+                    height="3px"
+                    d="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    fontWeight="600"
+                    alignSelf="flex-end"
+                    fontFamily={"monospace"}
+                    ml={5}
+                  >
+                    <Box
+                      as={MdKeyboardArrowRight}
+                      size="32px"
+                      color="green.400"
+                    />
+                  </Box>
+                </Flex>
+              </Button>
+            </Box>
           ))}
         </Box>
       </Box>
