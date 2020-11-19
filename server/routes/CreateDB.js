@@ -29,7 +29,7 @@ db.query("create table Location(LocID int NOT NULL AUTO_INCREMENT, Address varch
 db.query("create table Employee(EmpID int NOT NULL, EmpName varchar(15) NOT NULL, Phone varchar(11) NOT NULL, Gender char(1), Joindate date NOT NULL, Password varchar(30) NOT NULL, primary key(EmpID));");
 db.query("create table Customer(CustID int NOT NULL AUTO_INCREMENT,CustName varchar(15) NOT NULL, LocID int NOT NULL, Phone_no varchar(11) NOT NULL, primary key (CustID,Phone_no), foreign key(LocID) references Location(LocID));");
 db.query("create table Cart(CustID int NOT NULL, ItemID int, Quantity int, primary key(CustID,ItemID), foreign key(ItemID) references Menu(ItemID), foreign key(CustID) references Customer(CustID));");
-db.query("create table Vehicle(VehicleID int NOT NULL, LocID int, Status varchar(7), primary key(VehicleID), foreign key(LocID) references Location(LocID));");
+db.query("create table Vehicle(VehicleID int NOT NULL, EmpID int, primary key(VehicleID), foreign key(EmpID) references Employee(EmpID));");
 db.query("create table Delivery_Agent(EmpID int NOT NULL,CurrentStatus varchar(5) NOT NULL, primary key(EmpID), foreign key (EmpID) references Employee(EmpID));");
 db.query("create table Desk_Employee(EmpID int NOT NULL, Desk_No int NOT NULL, primary key(EmpID), foreign key (EmpID) references Employee(EmpID));");
 db.query("create table Payment(PaymentID int NOT NULL AUTO_INCREMENT, Payment_method varchar(5) NOT NULL, Payment_Amt float(7,2) NOT NULL, primary key(PaymentID));");
@@ -65,21 +65,16 @@ db.query("insert into Location values(NULL,'134/18 Golden Nagar' , 'Vasanth And 
 db.query("insert into Location values(NULL,'48 Brindhavan Nagar' , 'Gandhi Park');");
 db.query("insert into Location values(NULL,'59 Karupurayan Colony' , 'Stadium Sports Corner');");
 
-db.query("insert into Employee values(301, 'Kunal', '8907680243', 'M',DATE '2010-07-19', 'Ironmanrocks24');");
-db.query("insert into Employee values(302, 'Sejal', '8956750243', 'F',DATE '2008-06-01', 'Crystalpal13');");
+db.query("insert into Employee values(501, 'Kunal', '8907680243', 'M',DATE '2010-07-19', 'Ironmanrocks24');");
+db.query("insert into Employee values(502, 'Sejal', '8956750243', 'F',DATE '2008-06-01', 'Crystalpal13');");
 db.query("insert into Employee values(303, 'Harry', '7307683243', 'M',DATE '2009-03-13', 'Engineer101');");
-db.query("insert into Employee values(304, 'Simran', '7907685243', 'F',DATE '2010-05-23', 'SimplePassword');");
-db.query("insert into Employee values(305, 'Grace', '8907680243', 'F',DATE '2011-07-29', 'Greatday1234');");
-db.query("insert into Employee values(306, 'Karthi', '8907680243', 'M',DATE '2009-05-09', 'MySecurePassword12');");
-db.query("insert into Employee values(307, 'Jai', '8779023243', 'M',DATE '2009-08-30', 'Panther23434');");
+db.query("insert into Employee values(504, 'Simran', '7907685243', 'F',DATE '2010-05-23', 'SimplePassword');");
+db.query("insert into Employee values(505, 'Grace', '8907680243', 'F',DATE '2011-07-29', 'Greatday1234');");
+db.query("insert into Employee values(506, 'Karthi', '8907680243', 'M',DATE '2009-05-09', 'MySecurePassword12');");
+db.query("insert into Employee values(507, 'Jai', '8779023243', 'M',DATE '2009-08-30', 'Panther23434');");
 db.query("insert into Employee values(308, 'Sandy', '8457367243', 'M',DATE '2010-07-21', 'Hacker12345');");
 db.query("insert into Employee values(309, 'Siva', '7786890003', 'M',DATE '2010-09-11', 'Uncrackable123');");
 db.query("insert into Employee values(310, 'Sheela', '8212380243', 'F',DATE '2012-07-11', 'Jarvisisgreat1908');");
-db.query("insert into Employee values(401, 'Jack', '8212389043', 'M',DATE '2012-07-11', 'ididgreat111908');");
-db.query("insert into Employee values(404, 'Jack1', '9212389043', 'M',DATE '2012-07-11', 'ididgreat111908');");
-db.query("insert into Employee values(405, 'Jack2', '7212389043', 'M',DATE '2012-07-11', 'ididgreat111908');");
-db.query("insert into Employee values(406, 'Jack3', '8412389043', 'M',DATE '2012-07-11', 'ididgreat111908');");
-db.query("insert into Employee values(407, 'Jack4', '8212389043', 'M',DATE '2012-07-11', 'ididgreat111908');");
 
 db.query("insert into Customer values(101,'Mithun', 201, '9294029977');");
 db.query("insert into Customer values(102,'Dhanush', 202, '9924029971');");
@@ -103,23 +98,20 @@ db.query("insert into Cart values(108,609,1);");
 db.query("insert into Cart values(109,601,2);");
 db.query("insert into Cart values(110,605,3);");
 
-db.query("insert into Vehicle values(901, 201,'N/A');");
-db.query("insert into Vehicle values(902, 203,'N/A');");
-db.query("insert into Vehicle values(903, NULL,'avl');");
-db.query("insert into Vehicle values(904, NULL,'avl');");
-db.query("insert into Vehicle values(905, NULL,'avl');");
-db.query("insert into Vehicle values(906, 206,'N/A');");
-db.query("insert into Vehicle values(907, 202,'N/A');");
-db.query("insert into Vehicle values(908, NULL,'avl');");
-db.query("insert into Vehicle values(909, NULL,'avl');");
-db.query("insert into Vehicle values(910, 208,'N/A');");
+db.query("insert into Vehicle values(901, 501);");
+db.query("insert into Vehicle values(902, 502);");
+db.query("insert into Vehicle values(903, 504);");
+db.query("insert into Vehicle values(904, 505);");
+db.query("insert into Vehicle values(905, 506);");
+db.query("insert into Vehicle values(906, 507);");
 
-db.query("insert into Delivery_Agent values(301,'N/A');");
-db.query("insert into Delivery_Agent values(302,'avl');");
-db.query("insert into Delivery_Agent values(304,'N/A');");
-db.query("insert into Delivery_Agent values(305,'N/A');");
-db.query("insert into Delivery_Agent values(306,'N/A');");
-db.query("insert into Delivery_Agent values(307,'N/A');");
+
+db.query("insert into Delivery_Agent values(501,'avl');");
+db.query("insert into Delivery_Agent values(502,'avl');");
+db.query("insert into Delivery_Agent values(504,'avl');");
+db.query("insert into Delivery_Agent values(505,'avl');");
+db.query("insert into Delivery_Agent values(506,'avl');");
+db.query("insert into Delivery_Agent values(507,'avl');");
 
 db.query("insert into Desk_Employee values(303,11);");
 db.query("insert into Desk_Employee values(308,12);");
@@ -149,8 +141,8 @@ db.query("insert into OrderDetails values(104,NULL,707,TIMESTAMP'2020-08-19 09:2
 db.query("insert into OrderDetails values(107,NULL,708,TIMESTAMP'2020-08-25 04:23:12','DL');");
 db.query("insert into OrderDetails values(107,NULL,709,TIMESTAMP'2020-09-18 07:45:16','DL');");
 db.query("insert into OrderDetails values(108,NULL,710,TIMESTAMP'2020-09-19 10:54:19','DL');");
-db.query("insert into OrderDetails values(108,NULL,711,TIMESTAMP'2020-10-12 12:12:18','WT');");
-db.query("insert into OrderDetails values(103,NULL,712,TIMESTAMP'2020-10-13 13:13:10','WT');");
+db.query("insert into OrderDetails values(108,NULL,711,TIMESTAMP'2020-10-12 12:12:18','DL');");
+db.query("insert into OrderDetails values(103,NULL,712,TIMESTAMP'2020-10-13 13:13:10','DL');");
 
 db.query("insert into OrderItems values(401,601,200,1);");
 db.query("insert into OrderItems values(401,603,450,1);");
@@ -172,11 +164,19 @@ db.query("insert into OrderItems values(411,605,350,1);");
 db.query("insert into OrderItems values(412,605,350,1);");
 db.query("insert into OrderItems values(412,610,135,1);");
 
-db.query("insert into Delivers values(401,201,401);");
-db.query("insert into Delivers values(404,203,402);");
-db.query("insert into Delivers values(405,206,403);");
-db.query("insert into Delivers values(406,202,404);");
-db.query("insert into Delivers values(407,208,405);");
+db.query("insert into Delivers values(501,201,401);");
+db.query("insert into Delivers values(502,201,402);");
+db.query("insert into Delivers values(507,203,403);");
+db.query("insert into Delivers values(504,205,404);");
+db.query("insert into Delivers values(507,206,405);");
+db.query("insert into Delivers values(505,206,406);");
+db.query("insert into Delivers values(506,204,407);");
+db.query("insert into Delivers values(504,207,408);");
+db.query("insert into Delivers values(501,207,409);");
+db.query("insert into Delivers values(507,208,410);");
+db.query("insert into Delivers values(502,208,411);");
+db.query("insert into Delivers values(506,203,412);");
+
 
 res.send("inside ./createDB.....");
 });

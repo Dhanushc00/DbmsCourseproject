@@ -7,7 +7,7 @@ const db = require("../db");
 router.get("/", (req, res, next) => {
   //console.log("Menu Request---:" + req);
   console.log(req.query);
-  db.query(`select O.OrderID,O.OrderTimeStamp,P.Payment_method from OrderDetails O,Payment P  where P.PaymentID=O.PaymentID and O.CustID=${req.query.CustID};`,(err, response) => {
+  db.query(`select O.OrderID,O.OrderTimeStamp,P.Payment_method,O.Status from OrderDetails O,Payment P  where P.PaymentID=O.PaymentID and O.CustID=${req.query.CustID};`,(err, response) => {
       //if(err) console.log(err); 
       //console.log(`select OrderID,OrderTimeStamp from OrderDetails where CustID=${req.query.CustID};`,response);
       return res.status(200).send(response);
