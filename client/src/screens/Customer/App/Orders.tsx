@@ -36,7 +36,17 @@ import { rootReducerType } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { mdiCheckDecagram } from "@mdi/js";
 import Icon from "@mdi/react";
+import Lottie from "react-lottie";
+import cartAnim from "../../../assets/order.json";
 const Orders = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: cartAnim,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   function getWidth() {
     return Math.max(
       document.body.scrollWidth,
@@ -265,7 +275,8 @@ const Orders = () => {
           d="flex"
           flexDirection="column"
         >
-          <img width={220} height={220} src={OrderLogo} />
+          {/* <img width={220} height={220} src={OrderLogo} /> */}
+          <Lottie options={defaultOptions} height={250} width={250} />
           <Text
             alignSelf="center"
             m={5}
@@ -297,7 +308,18 @@ const Orders = () => {
                   color="#00ff00"
                   //spin
                 />
-              ) : null}
+              ) : (
+                <Icon
+                  path={mdiCheckDecagram}
+                  //title="User Profile"
+                  size={1}
+                  horizontal
+                  vertical
+                  rotate={180}
+                  color="#fff"
+                  //spin
+                />
+              )}
               <Button
                 bg="#505050"
                 color="#fff"

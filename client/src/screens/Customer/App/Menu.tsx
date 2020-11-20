@@ -17,18 +17,29 @@ import CartLogo from "../../../assets/cart2.svg";
 import { Divider } from "@material-ui/core";
 import Axios from "../../../axios";
 import { useLocation, useHistory, useRouteMatch } from "react-router-dom";
-import swal from 'sweetalert';
-import {useSelector} from 'react-redux';
-import {CustIDAction,CustID,CustIDState} from '../../../store/Cust';
-import {rootReducerType} from '../../../store/store';
+import swal from "sweetalert";
+import { useSelector } from "react-redux";
+import { CustIDAction, CustID, CustIDState } from "../../../store/Cust";
+import { rootReducerType } from "../../../store/store";
+import Lottie from "react-lottie";
+import foodCarousel from "../../../assets/Food-carousel1.json";
 const Menu: React.FC = (props) => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: foodCarousel,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   let history = useHistory();
   const location = useLocation();
   let { path, url } = useRouteMatch();
   //console.log(location.state);
-  const id: number = useSelector(
-    (state:rootReducerType) => {console.log(state.CustID.id); return Number(state.CustID.id);},
-  )
+  const id: number = useSelector((state: rootReducerType) => {
+    console.log(state.CustID.id);
+    return Number(state.CustID.id);
+  });
   interface values {
     id: string;
     name: string;
@@ -40,7 +51,7 @@ const Menu: React.FC = (props) => {
     ItemPrice: number;
     ItemName: string;
     Item_Status: string;
-    Quantity:number;
+    Quantity: number;
   }
   const [data, setData] = React.useState<values[]>([]);
   let price: number;
@@ -62,7 +73,7 @@ const Menu: React.FC = (props) => {
         const tp = res.data.map((q: Rec) => {
           return {
             id: String(q.ItemID),
-            qty: isNaN(q.Quantity)?0:Number(q.Quantity),
+            qty: isNaN(q.Quantity) ? 0 : Number(q.Quantity),
             price: q.ItemPrice,
             name: q.ItemName,
           };
@@ -94,12 +105,12 @@ const Menu: React.FC = (props) => {
     console.log(tp);
     Axios.post("/cart/upd", {
       data: tp,
-      id
+      id,
     })
       .then((res: any) => {
         console.log(res.data);
         //swal("Good job!", "You clicked the button!", "success");
-        history.push("/CustApp/cart",location.state);
+        history.push("/CustApp/cart", location.state);
       })
       .catch((err: any) => {
         if (err.response) {
@@ -120,7 +131,8 @@ const Menu: React.FC = (props) => {
         h="87vh"
         w="100%"
       >
-        <img width={220} height={220} src={CartLogo} />
+        <Lottie options={defaultOptions} height={250} width={250} />
+        {/* <img width={220} height={220} src={CartLogo} /> */}
       </Box>
     );
   }
@@ -143,7 +155,8 @@ const Menu: React.FC = (props) => {
           d="flex"
           flexDirection="column"
         >
-          <img width={220} height={220} src={CartLogo} />
+          {/* <img width={220} height={220} src={CartLogo} /> */}
+          <Lottie options={defaultOptions} height={250} width={250} />
           <Text
             alignSelf="center"
             m={5}

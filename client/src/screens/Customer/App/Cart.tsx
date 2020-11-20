@@ -30,8 +30,17 @@ import swal from "sweetalert";
 import Axios from "../../../axios";
 import { rootReducerType } from "../../../store/store";
 import { useSelector } from "react-redux";
-
+import Lottie from "react-lottie";
+import cartAnim from '../../../assets/cartcarousel.json'
 export default function Cart() {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: cartAnim,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   const toast = useToast();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -251,7 +260,22 @@ export default function Cart() {
       </Modal>
     </>
   );
-
+  if (data.length == 0) {
+    return (
+      <Box
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+        h="87vh"
+        w="100%"
+        flexDirection="column"
+      >
+        <Lottie options={defaultOptions} height={400} width={400} />
+        Your Cart is Empty!
+        {/* <img width={220} height={220} src={CartLogo} /> */}
+      </Box>
+    );
+  }
   //price = price * 1.18;
   console.log(getWidth());
   return (
@@ -275,16 +299,17 @@ export default function Cart() {
             d="flex"
             flexDirection="column"
           >
-            <img width={220} height={220} src={CartLogo} />
+            {/* <img width={220} height={220} src={CartLogo} /> */}
+            <Lottie options={defaultOptions} height={400} width={400} />
             <Text
               alignSelf="center"
-              m={5}
+              //m={2}
               fontSize="2xl"
               fontWeight={500}
               fontFamily={"monospace"}
               color="#505050"
             >
-              Your Cart {data.length == 0 ? " is empty." : "."}
+              My Cart {data.length == 0 ? " is empty." : ""}
             </Text>
           </Box>
         )}

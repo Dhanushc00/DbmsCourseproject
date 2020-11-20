@@ -18,7 +18,8 @@ import { useHistory,useLocation } from "react-router-dom";
 import OtpLogo from '../../assets/otp.svg';
 import { Dispatch } from "redux"
 import { useDispatch } from "react-redux"
-
+import Lottie from "react-lottie";
+import otp from "../../assets/otp.json";
 interface Values {
   OTP: string;
 }
@@ -29,6 +30,14 @@ interface LocationState {
   state: {CustID:number;};
 }
 const App:React.FC = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: otp,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
     const location=useLocation<LocationState>();
     const [OTP2,setOTP2]=React.useState<String>(uuidv4().substr(0,6));
     const toast = useToast();
@@ -45,7 +54,8 @@ const App:React.FC = () => {
   };
   return (
     <Box d="flex" flexDirection="column" justifyContent="center" alignItems="center" h="100vh">
-       <img src={OtpLogo} width={250} height={250}/>
+       {/* <img src={OtpLogo} width={250} height={250}/> */}
+       <Lottie options={defaultOptions} height={250} width={250} />
       <Box mt={10}></Box>
       <Formik
         initialValues={InitialValues}
