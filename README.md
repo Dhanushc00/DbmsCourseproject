@@ -1,7 +1,11 @@
 # DBMS COURSE PROJECT - Online Food  Ordering System 
-## Read "kernelpanic_Gno15_SectionE_Report.pdf" for complete report
-## React JS - TypeScript - ChakraUI - Formik - Axios - Frontend
-## NodeJS - Javascript - Express - Rest
+#### Read [Report.pdf] (https://github.com/Dhanushc00/DbmsCourseproject/blob/master/kernelpanic_Gno15_SectionE_Report.pdf) for complete report.
+#### React JS - TypeScript - ChakraUI - Formik - Axios 
+#### NodeJS - Javascript - Express - RestAPI
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ##Client
